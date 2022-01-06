@@ -2,8 +2,6 @@ package main
 
 import (
 	"fmt"
-	"unsafe"
-	"time"
 	"image"
 	"image/color"
 	"image/gif"
@@ -12,36 +10,51 @@ import (
 	"math/rand"
 	"net/http"
 	"strconv"
+	"time"
+	"unsafe"
 )
 
+type Celsius float64    //摄氏度
+type Fahrenheit float64 //华氏度
 
+const (
+	AbsoluteZeroC Celsius = -273.15 //绝对零度
+	FreezingC     Celsius = 0       //结冰点温度
+	BoilingC      Celsius = 100     //沸水温度
+)
+
+func CToF(c Celsius) Fahrenheit {
+	return Fahrenheit(c*9/5 + 32)
+}
+
+func FToC(f Fahrenheit) Celsius {
+	return Celsius((f - 32) * 5 / 9)
+}
 func print(s []string) {
 	for _, v := range s {
-	 fmt.Print(v)
+		fmt.Print(v)
 	}
 }
-func main1() {
+func main() {
 	print([]string{"你好, ", "脑子进了煎鱼"})
 
 	fmt.Println()
 	var a byte = 'A'
 	var b rune = 'B'
 	fmt.Printf("a 占用 %d 个字节数\n", unsafe.Sizeof(a))
-	fmt.Printf("b 占用 %d 个字节数\n",unsafe.Sizeof(b))
+	fmt.Printf("b 占用 %d 个字节数\n", unsafe.Sizeof(b))
 
-
-	message := make(chan string,2)
+	message := make(chan string, 2)
 	message <- "Hello, world!"
 	message <- "Hi, go "
 
 	fmt.Println(<-message)
 	fmt.Println(<-message)
 
-	done := make(chan bool)
-	go worker(done)
+	// done := make(chan bool)
+	// go worker(done)
 
-	<- done
-
+	// <- done
 
 	// c1 := make(chan string)
 	// c2 := make(chan string)
@@ -56,7 +69,6 @@ func main1() {
 	// 	c2 <- "two"
 	// }()
 
-
 	// for i := 0; i < 2; i++ {
 	// 	select{
 	// 	case msg1 := <- c1:
@@ -64,31 +76,52 @@ func main1() {
 	// 	case msg2 := <- c2:
 	// 		fmt.Println("received",msg2)
 	// 	}
-	
+
 	// }
 
-
+	//切片是引用类型
 	nums := []int{1, 2, 3, 4}
-	
+	fmt.Printf("\"修改前\": %v\n", "修改前")
 	fmt.Println(nums)
 
+	nums2 := nums
+	nums2[0] = 123
+	fmt.Println(nums)
+	fmt.Println(nums2)
+
+	fmt.Println("我是补全的代码")
+
+	var c Celsius
+	var f Fahrenheit
+	fmt.Println(c == 0)
+	fmt.Println(f == 0)
+
+	//数组是值类型
+	b1 := [3]int{1, 2, 3}
+	b2 := b1
+	b2[0] = 123
+
+	fmt.Println(b1)
+	fmt.Println(b2)
 
 }
 
-func worker(done chan<- bool){
+func worker(done chan<- bool) {
 	fmt.Print("working....")
-	time.Sleep(3*time.Second)
+	time.Sleep(2 * time.Second)
 	fmt.Println("done")
 
 	done <- true
 }
+
 var palette = []color.Color{color.White, color.Black}
-const(
+
+const (
 	whiteIndex = 0
 	blackIndex = 1
 )
 
-func main() {
+func main1() {
 	// http://localhost:7070/?cycles=10
 	handler := func(w http.ResponseWriter, r *http.Request) {
 		cycles, err := strconv.Atoi(r.FormValue("cycles"))
