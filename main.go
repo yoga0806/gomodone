@@ -6,9 +6,11 @@ import (
 	"image/color"
 	"image/gif"
 	"io"
+	"log"
 	"math"
 	"math/rand"
 	"net/http"
+	"os"
 	"strconv"
 	"time"
 	"unsafe"
@@ -103,6 +105,19 @@ func main() {
 
 	fmt.Println(b1)
 	fmt.Println(b2)
+
+	var s1 []int
+	fmt.Println(s1 == nil)
+
+	s1 = []int{1, 2, 3}
+	fmt.Println("cap:", cap(s1))
+	fmt.Println("len:", len(s1))
+
+	cwd, err := os.Getwd()
+	if err != nil {
+		log.Fatalf("os.Getwd failed: %v",err)
+	}
+	log.Printf("working directory = %s",cwd)
 
 }
 
